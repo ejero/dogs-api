@@ -5,7 +5,11 @@ const app = require('./index');
 // db setup
 const { sequelize, Dog } = require('./db');
 const seed = require('./db/seedFn');
-const {dogs} = require('./db/seedData');
+const { dogs } = require('./db/seedData');
+
+// Supertest
+const req = require('supertest');
+const { response } = require('./index');
 
 describe('Endpoints', () => {
     // to be used in POST test
@@ -33,4 +37,29 @@ describe('Endpoints', () => {
             expect(response.body[0]).toEqual(expect.objectContaining(dogs[0]));
         });
     });
+
+
+    describe('POST /dogs', () => {
+        let createdDog;
+        it('should create a new dog', async () => {
+            request(app)
+                .post('/dogs')
+                .send({ testDogData })
+                .expect({
+                    breed: 'Poodle',
+                    name: 'Sasha',
+                    color: 'black',
+                    description: 'Sasha is a beautiful black pooodle mix.  She is a great companion for her family.',
+                })
+                createdDog = response.body;
+                expect
+        })
+        it('find dog by id', async () => {
+            const foundDog = response.body.id;
+            request(app)
+                .get(`/dogs/${foundDog}`)
+                .expect(200)
+        })
+    })
+
 });
